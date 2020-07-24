@@ -14,6 +14,17 @@ function select_random_picture
         | sort -R | head -1
 }
 
+function dbus_session_bus_address
+{
+    local pid=$(pgrep gnome-session | head -1)
+
+    # here we replace \0 in \n in order to avoid
+    # warning: command substitution: ignored null byte in input
+    grep -z DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ \
+        | tr '\0' '\n' \
+        | cut -d= -f2-
+}
+
 
 if [ "$#" -gt 0 ]; then
     fname="$1"
@@ -25,7 +36,6 @@ fi
 # we'll receive the following error otherwise
 # failed to commit changes to dconf: Cannot autolaunch D-Bus without X11 $DISPLAY
 #
-pid=$(pgrep gnome-session | head -1)
-export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ | cut -d= -f2-)
+export DBUS_SESSION_BUS_ADDRESS=$(dbus_session_bus_address)
 
 set_background "$fname"
