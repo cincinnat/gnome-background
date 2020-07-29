@@ -36,6 +36,8 @@ fi
 # we'll receive the following error otherwise
 # failed to commit changes to dconf: Cannot autolaunch D-Bus without X11 $DISPLAY
 #
-export DBUS_SESSION_BUS_ADDRESS=$(dbus_session_bus_address)
+# NOTE: apparently, is not necessary for gnome on xorg (3.34)
+#
+#export DBUS_SESSION_BUS_ADDRESS=$(dbus_session_bus_address)
 
 set_background "$fname"
